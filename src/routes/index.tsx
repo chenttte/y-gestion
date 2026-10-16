@@ -5,6 +5,7 @@ import {
   HandCoins, ClipboardX, PhoneCall, FileBarChart, Users, Gauge, Receipt, Wallet, Wrench,
   BarChart3, TrendingUp, ShieldCheck, Zap, Clock, Lock, Lightbulb, Star, ChevronDown,
   Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Menu, X, Smartphone, Globe,
+  ShoppingCart, Banknote, Landmark, Calculator, Package, Sparkles,
 } from "lucide-react";
 import heroImg from "@/assets/hero-dashboard.jpg";
 import appImg from "@/assets/app-movil.jpg";
@@ -136,6 +137,72 @@ const plans = [
   { name: "Estándar", price: "400.000", desc: "Para Juntas en crecimiento que necesitan más control.", cta: "Solicitar demostración", popular: true, lead: "Todo lo del plan Básico, más:", items: ["Órdenes de trabajo", "Reportes avanzados", "App móvil", "Hasta 2.000 usuarios", "Soporte prioritario"] },
   { name: "Premium", price: "600.000", desc: "Gestión completa para organizaciones grandes y cooperativas.", cta: "Solicitar asesoramiento", items: ["Usuarios ilimitados", "Todos los módulos", "Portal de usuarios", "Indicadores gerenciales", "App móvil completa", "Capacitación inicial", "Soporte prioritario", "Hosting", "Actualizaciones", "Backups automáticos"] },
 ];
+
+const customModules = [
+  { i: ShoppingCart, t: "Compras", d: "Órdenes de compra y proveedores" },
+  { i: Banknote, t: "Pagos", d: "Pago a proveedores y sueldos" },
+  { i: Landmark, t: "Tesorería", d: "Caja, bancos y movimientos" },
+  { i: Calculator, t: "Contabilidad", d: "Libro diario, mayor y balances" },
+  { i: Package, t: "Stock", d: "Inventario de insumos y repuestos" },
+];
+
+function CustomPlan() {
+  const [sel, setSel] = useState<string[]>([]);
+  const toggle = (t: string) => setSel((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
+  const msg = sel.length
+    ? `Hola, quiero un plan a medida con los módulos: ${sel.join(", ")}.`
+    : "Hola, quiero un plan a medida para nuestra Junta de Saneamiento.";
+  return (
+    <div className="reveal mt-6 rounded-3xl border border-primary/25 bg-card p-8 shadow-lift md:p-10">
+      <div className="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-navy">
+            <Sparkles className="h-4 w-4 text-primary" /> Plan a medida
+          </span>
+          <h3 className="mt-5 text-2xl font-extrabold tracking-tight text-navy md:text-3xl">
+            Arme su plan con los módulos que su organización necesita
+          </h3>
+          <p className="mt-4 text-muted-foreground">
+            A los módulos de cada plan puede sumar áreas de gestión administrativa y financiera.
+            La cotización se ajusta a los módulos elegidos y a la cantidad de usuarios.
+          </p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            <Check>Cotización según módulos y usuarios</Check>
+            <Check>Implementación por etapas</Check>
+            <Check>Capacitación por área</Check>
+            <Check>Hosting, soporte y backups incluidos</Check>
+          </ul>
+          <a href={waLink(msg)} target="_blank" rel="noopener" className={`${btnPrimary} mt-8`}>
+            <CalendarCheck className="h-5 w-5" />Cotizar mi plan a medida
+          </a>
+        </div>
+        <div className="rounded-2xl border border-border bg-surface p-6">
+          <p className="text-sm font-bold uppercase tracking-widest text-primary">Elija los módulos a incluir</p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {customModules.map(({ i: I, t, d }, k) => {
+              const on = sel.includes(t);
+              return (
+                <button key={t} type="button" onClick={() => toggle(t)} aria-pressed={on}
+                  className={`flex items-start gap-3 rounded-xl border p-4 text-left transition ${on ? "border-primary bg-primary/10 shadow-soft" : "border-border bg-card hover:border-primary/50"} ${k === customModules.length - 1 ? "col-span-2" : ""}`}>
+                  <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${on ? "bg-gradient-primary text-primary-foreground" : "bg-accent text-primary"}`}>
+                    <I className="h-5 w-5" />
+                  </span>
+                  <span>
+                    <span className="block font-bold text-navy">{t}</span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">{d}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-4 min-h-10 text-sm text-muted-foreground">
+            {sel.length ? `Módulos seleccionados: ${sel.join(", ")}.` : "Toque los módulos que desea incluir y envíelos por WhatsApp."}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const faqs = [
   ["¿Debo comprar servidores?", "No. El servicio incluye hosting: el sistema funciona en la nube y usted solo necesita una computadora o celular con internet."],
