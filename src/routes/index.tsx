@@ -178,12 +178,12 @@ function CustomPlan() {
         </div>
         <div className="rounded-2xl border border-border bg-surface p-6">
           <p className="text-sm font-bold uppercase tracking-widest text-primary">Elija los módulos a incluir</p>
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {customModules.map(({ i: I, t, d }, k) => {
               const on = sel.includes(t);
               return (
                 <button key={t} type="button" onClick={() => toggle(t)} aria-pressed={on}
-                  className={`flex items-start gap-3 rounded-xl border p-4 text-left transition ${on ? "border-primary bg-primary/10 shadow-soft" : "border-border bg-card hover:border-primary/50"} ${k === customModules.length - 1 ? "col-span-2" : ""}`}>
+                  className={`flex items-start gap-3 rounded-xl border p-4 text-left transition ${on ? "border-primary bg-primary/10 shadow-soft" : "border-border bg-card hover:border-primary/50"} ${k === customModules.length - 1 ? "sm:col-span-2" : ""}`}>
                   <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${on ? "bg-gradient-primary text-primary-foreground" : "bg-accent text-primary"}`}>
                     <I className="h-5 w-5" />
                   </span>
