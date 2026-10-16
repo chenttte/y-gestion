@@ -211,6 +211,7 @@ const faqs = [
   ["¿Puedo acceder desde cualquier lugar?", "Sí. Puede ingresar desde la oficina, su casa o el celular, en cualquier momento."],
   ["¿Capacitan a nuestro personal?", "Sí. Capacitamos a administradores, encargados de facturación y lecturistas para que usen el sistema con confianza."],
   ["¿La aplicación móvil funciona sin internet?", "Sí. Los lecturistas registran las lecturas sin conexión y los datos se sincronizan automáticamente al recuperar señal."],
+  ["¿Puedo agregar módulos como compras, pagos o contabilidad?", "Sí. Con el plan a medida usted elige los módulos que necesita —Compras, Pagos, Tesorería, Contabilidad y Stock— y recibe una cotización según esos módulos y la cantidad de usuarios."],
 ];
 
 function Index() {
@@ -407,6 +408,7 @@ function Index() {
               </div>
             ))}
           </div>
+          <CustomPlan />
         </div>
       </section>
 
