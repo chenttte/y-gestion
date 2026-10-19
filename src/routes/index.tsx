@@ -255,6 +255,24 @@ function Index() {
         </div>
       </section>
 
+      {/* FRANJA DE CONFIANZA */}
+      <section className="border-y border-border bg-card">
+        <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { i: Globe, t: "Sin instalación", d: "Funciona desde la computadora o el celular" },
+            { i: Lock, t: "Acceso seguro", d: "Usuario y contraseña para cada funcionario" },
+            { i: ShieldCheck, t: "Sus datos respaldados", d: "Copias de seguridad automáticas" },
+            { i: PhoneCall, t: "Soporte cercano", d: "Atención por WhatsApp y teléfono" },
+          ].map(({ i: I, t, d }) => (
+            <div key={t} className="flex items-center gap-4">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent text-primary"><I className="h-5 w-5" /></span>
+              <div><p className="font-bold text-navy">{t}</p><p className="text-sm text-muted-foreground">{d}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
       {/* PROBLEMAS */}
       <section className="bg-surface py-24">
         <div className="mx-auto max-w-7xl px-5">
