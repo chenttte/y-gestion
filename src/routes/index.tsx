@@ -294,7 +294,7 @@ function Index() {
       <section id="app" className="bg-gradient-navy py-24 text-navy-foreground">
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
           <div className="reveal order-2 lg:order-1">
-            <img src={appImg} alt="App móvil para registrar lecturas de medidores" width={1024} height={1152} loading="lazy" className="mx-auto max-h-[560px] w-auto rounded-3xl object-cover shadow-lift" />
+            <img src={appImg} alt="App móvil para registrar lecturas de medidores" width={928} height={1152} loading="lazy" className="mx-auto max-h-[560px] w-auto rounded-3xl object-cover shadow-lift" />
           </div>
           <div className="reveal order-1 lg:order-2">
             <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-sky"><Smartphone className="h-4 w-4" />App móvil</span>
