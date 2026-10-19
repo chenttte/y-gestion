@@ -10,6 +10,7 @@ import {
 import heroImg from "@/assets/hero-dashboard.jpg";
 import appImg from "@/assets/app-movil.jpg";
 import { BRAND, waLink, PHONE, EMAIL, ADDRESS } from "@/lib/contact";
+import { ContactForm } from "@/components/ContactForm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -446,12 +447,41 @@ function Index() {
         </div>
       </section>
 
+      {/* CÓMO EMPEZAR */}
+      <section id="como-empezar" className="bg-surface py-24">
+        <div className="mx-auto max-w-7xl px-5">
+          <SectionHead eyebrow="Cómo empezar" title="Su Junta digitalizada en 4 pasos simples" desc="Lo acompañamos en todo el proceso para que el cambio sea sin interrupciones y sin complicaciones." />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { t: "Cargamos sus datos", d: "Pasamos su padrón de usuarios, medidores y tarifas al sistema. Usted no tiene que cargar nada." },
+              { t: "Capacitamos a su equipo", d: "Enseñamos a administradores, cajeros y lecturistas a usar el sistema paso a paso." },
+              { t: "Lee y factura", d: "Cada mes se toman las lecturas con la app y el sistema genera todas las facturas automáticamente." },
+              { t: "Controla todo", d: "Vea cobros, deudas, consumos y reportes actualizados cuando lo necesite." },
+            ].map((s, k) => (
+              <div key={s.t} className="reveal rounded-2xl border border-border bg-card p-7 shadow-soft">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-primary text-lg font-extrabold text-primary-foreground">{k + 1}</span>
+                <h3 className="mt-5 text-lg font-bold text-navy">{s.t}</h3>
+                <p className="mt-2 text-muted-foreground">{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
-      <section id="contacto" className="px-5 pb-24">
+      <section id="contacto" className="px-5 py-24">
         <div className="reveal mx-auto max-w-6xl rounded-[2rem] bg-gradient-navy px-6 py-16 text-center text-navy-foreground shadow-lift md:px-16 md:py-20">
           <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl">Modernice hoy la gestión de su Junta de Saneamiento</h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg opacity-85">Controle lecturas, facturación, cobranzas y usuarios desde una única plataforma diseñada especialmente para organizaciones de agua potable.</p>
           <div className="mt-10"><CTAButtons center /></div>
+        </div>
+        <div className="mx-auto mt-16 grid max-w-6xl items-start gap-10 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <h2 className="text-3xl font-extrabold tracking-tight text-navy">Solicite su demostración gratuita</h2>
+            <p className="mt-4 text-lg text-muted-foreground">Complete el formulario y nos comunicaremos con usted para coordinar una demostración del sistema.</p>
+            <a href={waLink(demoMsg)} target="_blank" rel="noopener" className={`${btnWa} mt-6`}><MessageCircle className="h-5 w-5" />Prefiero WhatsApp</a>
+          </div>
+          <div className="lg:col-span-3"><ContactForm /></div>
         </div>
       </section>
 
