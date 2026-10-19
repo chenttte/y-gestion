@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AquaGestión" },
+      { title: "Y-Gestión" },
       { name: "description", content: "Sistema de gestión para Juntas de Saneamiento y Aguaterías de Paraguay." },
     ],
     links: [

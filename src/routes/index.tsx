@@ -305,7 +305,6 @@ function Index() {
               <Check>Sincronización automática</Check>
               <Check>Consulta de clientes</Check>
               <Check>Historial de lecturas</Check>
-              <Check>Fotografías de respaldo</Check>
             </ul>
             <a href={waLink("Hola, quiero ver la App móvil para lecturistas.")} target="_blank" rel="noopener" className={`${btnWa} mt-10`}><MessageCircle className="h-5 w-5" />Quiero ver la app</a>
           </div>
@@ -444,6 +443,7 @@ function Index() {
           <div className="md:col-span-2">
             <Logo />
             <p className="mt-4 max-w-sm text-muted-foreground">Sistema de gestión especializado para Juntas de Saneamiento, Aguaterías y Cooperativas de agua de Paraguay.</p>
+            <p className="mt-3 text-sm font-medium text-primary">“Y” significa agua en guaraní.</p>
             <div className="mt-5 flex gap-3">
               {[Facebook, Instagram, Linkedin].map((I, k) => <a key={k} href="#" aria-label="Red social" className="grid h-10 w-10 place-items-center rounded-full bg-card text-navy shadow-soft hover:text-primary"><I className="h-4 w-4" /></a>)}
             </div>
