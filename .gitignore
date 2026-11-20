@@ -35,3 +35,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Capturas originales con datos personales (las publicables están en src/assets/capturas)
+/capturas/

@@ -1,24 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
-  Droplets, CheckCircle2, MessageCircle, CalendarCheck, FileSpreadsheet, AlertTriangle,
-  HandCoins, ClipboardX, PhoneCall, FileBarChart, Users, Gauge, Receipt, Wallet, Wrench,
-  BarChart3, TrendingUp, ShieldCheck, Zap, Clock, Lock, Lightbulb, Star, ChevronDown,
-  Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Menu, X, Smartphone, Globe,
-  ShoppingCart, Banknote, Landmark, Calculator, Package, Sparkles,
+  Droplets, Check as CheckIcon, MessageCircle, Phone, Mail, Menu, X, Server, Cloud, ArrowRight,
+  WifiOff, MapPin, History, Wallet, Smartphone, Monitor,
 } from "lucide-react";
-import heroImg from "@/assets/hero-dashboard.jpg";
-import appImg from "@/assets/app-movil.jpg";
-import { BRAND, waLink, PHONE, EMAIL, ADDRESS } from "@/lib/contact";
+import panelImg from "@/assets/capturas/sistema-panel.webp";
+import prefacturasImg from "@/assets/capturas/sistema-prefacturas.webp";
+import appLecturasImg from "@/assets/capturas/app-lecturas.webp";
+import appPeriodosImg from "@/assets/capturas/app-periodos.webp";
+import appCatastroImg from "@/assets/capturas/app-catastro.webp";
+import appMapaImg from "@/assets/capturas/app-mapa.webp";
+import { BRAND, COMPANY, waLink, PHONE, PHONE_LOCAL, EMAIL } from "@/lib/contact";
 import { ContactForm } from "@/components/ContactForm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: `${BRAND} | Sistema para Juntas de Saneamiento y Aguaterías de Paraguay` },
-      { name: "description", content: "Digitalice su Junta de Saneamiento: lecturas con app móvil, facturación automática, cobranzas, control de morosos y reportes en una sola plataforma." },
-      { property: "og:title", content: `${BRAND} | Gestión para Juntas de Saneamiento` },
-      { property: "og:description", content: "Lecturas, facturación, cobranzas y órdenes de trabajo desde una sola plataforma. Solicite su demostración." },
+      { title: `${BRAND} | Sistema para Juntas de Saneamiento y aguaterías del Paraguay` },
+      { name: "description", content: "Lecturas con el celular, facturación del período, cobros y control de morosidad para Juntas de Saneamiento. En la nube o en su propio servidor." },
+      { property: "og:title", content: `${BRAND} | Sistema para Juntas de Saneamiento` },
+      { property: "og:description", content: "Del medidor a la asamblea: lecturas, facturación, cobros y morosidad en un solo sistema." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -26,502 +27,435 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const btnPrimary = "inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-primary-foreground shadow-lift transition hover:-translate-y-0.5 hover:bg-primary/90";
-const btnWa = "inline-flex items-center justify-center gap-2 rounded-xl bg-success px-6 py-3.5 font-semibold text-success-foreground shadow-soft transition hover:-translate-y-0.5 hover:bg-success/90";
-const btnGhost = "inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3.5 font-semibold text-navy shadow-soft transition hover:-translate-y-0.5 hover:border-primary";
+// Precio base de instalación (el monto final depende de cada Junta).
+const INSTALL_FEE = "660.000";
+const demoMsg = "Hola, quisiera coordinar una demostración de Y-Gestión para nuestra Junta de Saneamiento.";
+const telHref = `tel:+${PHONE.replace(/\D/g, "")}`;
 
-const demoMsg = "Hola, quisiera solicitar una demostración del sistema para nuestra Junta de Saneamiento.";
+const btn = "inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 font-semibold transition";
+const btnPrimary = `${btn} bg-primary text-primary-foreground hover:bg-primary/90`;
+const btnOutline = `${btn} border border-ink/20 bg-background text-ink hover:border-ink/50`;
 
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll(".reveal");
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
-    }), { threshold: 0.12 });
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
-
-function Check({ children }: { children: React.ReactNode }) {
+function Logo({ light }: { light?: boolean }) {
   return (
-    <li className="flex items-start gap-2.5">
-      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
-      <span>{children}</span>
-    </li>
-  );
-}
-
-function SectionHead({ eyebrow, title, desc }: { eyebrow: string; title: string; desc?: string }) {
-  return (
-    <div className="reveal mx-auto mb-14 max-w-3xl text-center">
-      <span className="text-sm font-bold uppercase tracking-widest text-primary">{eyebrow}</span>
-      <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-navy md:text-5xl">{title}</h2>
-      {desc && <p className="mt-5 text-lg text-muted-foreground">{desc}</p>}
-    </div>
-  );
-}
-
-function Logo() {
-  return (
-    <span className="flex items-center gap-2 text-xl font-extrabold text-navy">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-primary text-primary-foreground"><Droplets className="h-5 w-5" /></span>
+    <span className={`flex items-center gap-2.5 font-display text-xl font-bold ${light ? "text-white" : "text-ink"}`}>
+      <span className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
+        <Droplets className="h-[18px] w-[18px]" />
+      </span>
       {BRAND}
     </span>
   );
 }
 
+function Item({ children }: { children: ReactNode }) {
+  return (
+    <li className="flex items-start gap-2.5">
+      <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-primary" strokeWidth={3} />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+// Encabezado de sección alineado a la izquierda, con número de sección.
+function Heading({ n, label, title, children }: { n: string; label: string; title: string; children?: ReactNode }) {
+  return (
+    <div className="mb-12 max-w-3xl">
+      <p className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+        {n} · {label}
+      </p>
+      <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-ink md:text-[2.75rem]">{title}</h2>
+      {children && <div className="mt-4 text-lg text-muted-foreground">{children}</div>}
+    </div>
+  );
+}
+
+function PhoneShot({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="overflow-hidden rounded-[1.75rem] border-[6px] border-ink bg-ink shadow-[0_24px_48px_-20px_rgb(0_0_0/0.45)]">
+      <img src={src} alt={alt} width={540} height={1134} loading="lazy" className="block w-full" />
+    </div>
+  );
+}
+
 function Header() {
   const [open, setOpen] = useState(false);
-  const links = [["Funcionalidades", "#funcionalidades"], ["App móvil", "#app"], ["Beneficios", "#beneficios"], ["Planes", "#planes"], ["Preguntas", "#faq"]];
+  const links = [["El período", "#periodo"], ["App", "#app"], ["Módulos", "#modulos"], ["Precios", "#precios"], ["Preguntas", "#faq"]] as const;
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-lg">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 py-4">
-        <a href="#inicio"><Logo /></a>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground lg:flex">
-          {links.map(([l, h]) => <a key={h} href={h} className="hover:text-primary">{l}</a>)}
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
+        <a href="#inicio" aria-label={`${BRAND}, inicio`}><Logo /></a>
+        <nav className="hidden items-center gap-7 text-[15px] font-medium text-muted-foreground lg:flex">
+          {links.map(([l, h]) => <a key={h} href={h} className="hover:text-ink">{l}</a>)}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <a href={waLink()} target="_blank" rel="noopener" className="flex items-center gap-1.5 text-sm font-semibold text-success"><MessageCircle className="h-4 w-4" />WhatsApp</a>
-          <a href={waLink(demoMsg)} target="_blank" rel="noopener" className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Solicitar demostración</a>
+        <div className="hidden items-center gap-5 lg:flex">
+          <a href={telHref} className="text-sm font-semibold text-ink">{PHONE_LOCAL}</a>
+          <a href="#contacto" className={`${btnPrimary} px-4 py-2.5 text-sm`}>Pedir demostración</a>
         </div>
-        <button className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Menú">{open ? <X /> : <Menu />}</button>
+        <button className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Menú" aria-expanded={open}>{open ? <X /> : <Menu />}</button>
       </div>
       {open && (
         <nav className="flex flex-col gap-4 border-t border-border bg-background px-5 py-5 lg:hidden">
-          {links.map(([l, h]) => <a key={h} href={h} onClick={() => setOpen(false)} className="font-medium">{l}</a>)}
-          <a href={waLink(demoMsg)} target="_blank" rel="noopener" className={btnPrimary}>Solicitar demostración</a>
+          {links.map(([l, h]) => <a key={h} href={h} onClick={() => setOpen(false)} className="font-medium text-ink">{l}</a>)}
+          <a href="#contacto" onClick={() => setOpen(false)} className={btnPrimary}>Pedir demostración</a>
         </nav>
       )}
     </header>
   );
 }
 
-function CTAButtons({ center }: { center?: boolean }) {
-  return (
-    <div className={`flex flex-col gap-3 sm:flex-row ${center ? "sm:justify-center" : ""}`}>
-      <a href={waLink(demoMsg)} target="_blank" rel="noopener" className={btnPrimary}><CalendarCheck className="h-5 w-5" />Solicitar demostración</a>
-      <a href={waLink()} target="_blank" rel="noopener" className={btnWa}><MessageCircle className="h-5 w-5" />Contactar por WhatsApp</a>
-    </div>
-  );
-}
-
-const problems = [
-  { i: FileSpreadsheet, t: "Lecturas en papel", d: "Planillas que se pierden, se mojan o se transcriben con errores." },
-  { i: AlertTriangle, t: "Errores de facturación", d: "Cálculos manuales que generan cobros incorrectos y desconfianza." },
-  { i: HandCoins, t: "Cobro difícil de deudas", d: "Sin saber con claridad quién debe, cuánto y desde cuándo." },
-  { i: ClipboardX, t: "Falta de control administrativo", d: "Información dispersa entre cuadernos, Excel y la memoria de cada uno." },
-  { i: PhoneCall, t: "Reclamos constantes", d: "Usuarios que llaman o van a la oficina para consultar su saldo." },
-  { i: FileBarChart, t: "Reportes incompletos", d: "La comisión directiva decide sin datos actualizados." },
+const steps = [
+  { app: true, t: "Lectura en terreno", d: "El lecturista recorre su zona con el celular. Ve la lectura anterior de cada medidor, carga la actual y el consumo se calcula solo. Funciona sin señal y sincroniza al volver." },
+  { app: false, t: "Pre-facturas del período", d: "Con las lecturas cargadas, el sistema genera las pre-facturas por sector o por conexión, con fecha de emisión y vencimiento, listas para imprimir." },
+  { app: false, t: "Cobro en caja", d: "Cada pago queda registrado y actualiza la cuenta corriente del socio. Nadie tiene que buscar en el cuaderno quién pagó y quién no." },
+  { app: false, t: "Control de morosidad", d: "El panel muestra la deuda acumulada y los mayores deudores con sus días de mora, para decidir avisos, cortes y reconexiones con datos." },
+  { app: false, t: "Informe a la comisión", d: "Facturado, cobrado, consumo por período y eficiencia de recaudación, listos para la reunión de la comisión directiva o la asamblea." },
 ];
 
-const modules = [
-  { i: Users, t: "Gestión de Clientes", items: ["Datos completos de cada socio", "Historial de servicio", "Consumos por período"] },
-  { i: Gauge, t: "Lecturas", items: ["App móvil para lecturistas", "Trabajo online y offline", "Registro rápido en terreno"] },
-  { i: Receipt, t: "Facturación", items: ["Emisión automática", "Tarifas configurables", "Control de vencimientos"] },
-  { i: Wallet, t: "Cobranzas", items: ["Registro de pagos", "Cuenta corriente", "Estados de cuenta"] },
-  { i: Wrench, t: "Órdenes de Trabajo", items: ["Cortes y reconexiones", "Reclamos", "Reparaciones"] },
-  { i: BarChart3, t: "Reportes", items: ["Morosidad y recaudación", "Consumo", "Indicadores clave"] },
+const appFeatures = [
+  { I: WifiOff, t: "Funciona sin señal", d: "Las lecturas se guardan en el celular y se envían al recuperar conexión." },
+  { I: History, t: "Lectura anterior a la vista", d: "El consumo del período se calcula en el momento." },
+  { I: MapPin, t: "Medidores en el mapa", d: "Se marca dónde está cada medidor para ubicarlo en la próxima ronda." },
+  { I: Wallet, t: "Consulta de saldos", d: "Si un socio pregunta cuánto debe, se le responde ahí mismo." },
 ];
 
-const benefits = [
-  { i: TrendingUp, t: "Aumente la recaudación", d: "Identifique morosos al instante y recupere ingresos pendientes." },
-  { i: ShieldCheck, t: "Reduzca errores administrativos", d: "Cálculos automáticos y precisos en cada factura." },
-  { i: Zap, t: "Automatice procesos", d: "Lo que antes tomaba días, ahora se resuelve en minutos." },
-  { i: Clock, t: "Información en tiempo real", d: "Consulte el estado de su Junta desde el celular o la computadora." },
-  { i: Lock, t: "Proteja sus datos", d: "Copias de seguridad automáticas y acceso con usuario y contraseña." },
-  { i: Lightbulb, t: "Tome mejores decisiones", d: "Reportes claros para presentar a la comisión y a la asamblea." },
+const appShots = [
+  { src: appPeriodosImg, cap: "Elegir el período activo", alt: "App: selección del período de lectura activo" },
+  { src: appCatastroImg, cap: "Buscar el medidor", alt: "App: catastro de medidores; el pin verde indica que el medidor ya tiene ubicación" },
+  { src: appMapaImg, cap: "Fijar su ubicación", alt: "App: mapa para fijar la ubicación de un medidor" },
 ];
 
 const plans = [
-  { name: "Básico", price: "250.000", desc: "Ideal para Juntas pequeñas que inician su digitalización.", cta: "Comenzar ahora", items: ["Gestión de socios", "Lecturas", "Facturación", "Cobranzas", "Hosting", "Soporte", "Actualizaciones", "Backups automáticos", "Hasta 500 usuarios"] },
-  { name: "Estándar", price: "400.000", desc: "Para Juntas en crecimiento que necesitan más control.", cta: "Solicitar demostración", popular: true, lead: "Todo lo del plan Básico, más:", items: ["Órdenes de trabajo", "Reportes avanzados", "App móvil", "Hasta 2.000 usuarios", "Soporte prioritario"] },
-  { name: "Premium", price: "600.000", desc: "Gestión completa para organizaciones grandes y cooperativas.", cta: "Solicitar asesoramiento", items: ["Usuarios ilimitados", "Todos los módulos", "Portal de usuarios", "Indicadores gerenciales", "App móvil completa", "Capacitación inicial", "Soporte prioritario", "Hosting", "Actualizaciones", "Backups automáticos"] },
+  { name: "Básico", price: "250.000", who: "Juntas pequeñas que empiezan a dejar el papel.", users: "Hasta 500 usuarios", rec: false, lead: "", items: ["Padrón de socios y conexiones", "Lecturas", "Facturación", "Cobranzas", "Soporte y actualizaciones"] },
+  { name: "Estándar", price: "400.000", who: "Juntas en crecimiento que necesitan más control.", users: "Hasta 2.000 usuarios", rec: true, lead: "Todo lo del Básico, más:", items: ["App móvil para lecturistas", "Órdenes de trabajo: cortes, reconexiones y reclamos", "Reportes avanzados", "Soporte prioritario"] },
+  { name: "Premium", price: "600.000", who: "Organizaciones grandes y cooperativas de agua.", users: "Usuarios ilimitados", rec: false, lead: "Todo lo del Estándar, más:", items: ["Portal de consulta para usuarios", "Indicadores gerenciales", "Todos los módulos de gestión", "Capacitación por área"] },
 ];
 
-const customModules = [
-  { i: ShoppingCart, t: "Compras", d: "Órdenes de compra y proveedores" },
-  { i: Banknote, t: "Pagos", d: "Pago a proveedores y sueldos" },
-  { i: Landmark, t: "Tesorería", d: "Caja, bancos y movimientos" },
-  { i: Calculator, t: "Contabilidad", d: "Libro diario, mayor y balances" },
-  { i: Package, t: "Stock", d: "Inventario de insumos y repuestos" },
-];
+const extraModules = [
+  ["Compras", "Órdenes de compra y proveedores"],
+  ["Pagos", "Pago a proveedores y sueldos"],
+  ["Bancos", "Cuentas, depósitos y conciliación"],
+  ["Contabilidad", "Libro diario, mayor y balances"],
+  ["Stock", "Insumos, medidores y repuestos"],
+  ["Activo fijo", "Bienes de la Junta y su depreciación"],
+  ["Ventas", "Venta de materiales y servicios"],
+] as const;
 
-function CustomPlan() {
+function Modules() {
   const [sel, setSel] = useState<string[]>([]);
   const toggle = (t: string) => setSel((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
   const msg = sel.length
-    ? `Hola, quiero un plan a medida con los módulos: ${sel.join(", ")}.`
-    : "Hola, quiero un plan a medida para nuestra Junta de Saneamiento.";
+    ? `Hola, quiero cotizar Y-Gestión con los módulos: ${sel.join(", ")}.`
+    : "Hola, quiero cotizar Y-Gestión con módulos administrativos.";
   return (
-    <div className="reveal mt-6 rounded-3xl border border-primary/25 bg-card p-8 shadow-lift md:p-10">
-      <div className="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-navy">
-            <Sparkles className="h-4 w-4 text-primary" /> Plan a medida
-          </span>
-          <h3 className="mt-5 text-2xl font-extrabold tracking-tight text-navy md:text-3xl">
-            Arme su plan con los módulos que su organización necesita
-          </h3>
-          <p className="mt-4 text-muted-foreground">
-            A los módulos de cada plan puede sumar áreas de gestión administrativa y financiera.
-            La cotización se ajusta a los módulos elegidos y a la cantidad de usuarios.
-          </p>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Check>Cotización según módulos y usuarios</Check>
-            <Check>Implementación por etapas</Check>
-            <Check>Capacitación por área</Check>
-            <Check>Hosting, soporte y backups incluidos</Check>
-          </ul>
-          <a href={waLink(msg)} target="_blank" rel="noopener" className={`${btnPrimary} mt-8`}>
-            <CalendarCheck className="h-5 w-5" />Cotizar mi plan a medida
-          </a>
+    <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
+      <div>
+        <h3 className="font-display text-xl font-bold text-ink">Base de todos los planes</h3>
+        <ul className="mt-5 space-y-3">
+          <Item>Padrón de socios, conexiones y medidores</Item>
+          <Item>Lecturas por período y por sector</Item>
+          <Item>Facturación con tarifas configurables</Item>
+          <Item>Cobros y cuenta corriente de cada socio</Item>
+          <Item>Consultas e informes</Item>
+        </ul>
+        <p className="mt-8 text-muted-foreground">
+          Si la Junta también lleva su administración, sume los módulos que necesite. Están en el mismo
+          sistema, así que lo que se cobra en caja llega solo a bancos y a contabilidad.
+        </p>
+      </div>
+      <div className="rounded-lg border border-border bg-background p-6">
+        <p className="text-sm font-semibold text-ink">Marque los módulos que le interesan y le enviamos una cotización:</p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          {extraModules.map(([t, d]) => {
+            const on = sel.includes(t);
+            return (
+              <button key={t} type="button" onClick={() => toggle(t)} aria-pressed={on}
+                className={`flex items-start gap-3 rounded-md border px-3.5 py-3 text-left transition ${on ? "border-primary bg-water" : "border-border hover:border-ink/40"}`}>
+                <span className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-sm border ${on ? "border-primary bg-primary text-primary-foreground" : "border-ink/30"}`}>
+                  {on && <CheckIcon className="h-3 w-3" strokeWidth={3.5} />}
+                </span>
+                <span>
+                  <span className="block font-semibold text-ink">{t}</span>
+                  <span className="block text-sm text-muted-foreground">{d}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
-        <div className="rounded-2xl border border-border bg-surface p-6">
-          <p className="text-sm font-bold uppercase tracking-widest text-primary">Elija los módulos a incluir</p>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {customModules.map(({ i: I, t, d }, k) => {
-              const on = sel.includes(t);
-              return (
-                <button key={t} type="button" onClick={() => toggle(t)} aria-pressed={on}
-                  className={`flex items-start gap-3 rounded-xl border p-4 text-left transition ${on ? "border-primary bg-primary/10 shadow-soft" : "border-border bg-card hover:border-primary/50"} ${k === customModules.length - 1 ? "sm:col-span-2" : ""}`}>
-                  <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${on ? "bg-gradient-primary text-primary-foreground" : "bg-accent text-primary"}`}>
-                    <I className="h-5 w-5" />
-                  </span>
-                  <span>
-                    <span className="block font-bold text-navy">{t}</span>
-                    <span className="mt-0.5 block text-xs text-muted-foreground">{d}</span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          <p className="mt-4 min-h-10 text-sm text-muted-foreground">
-            {sel.length ? `Módulos seleccionados: ${sel.join(", ")}.` : "Toque los módulos que desea incluir y envíelos por WhatsApp."}
-          </p>
-        </div>
+        <a href={waLink(msg)} target="_blank" rel="noopener" className={`${btnPrimary} mt-5 w-full`}>
+          Cotizar {sel.length ? `${sel.length} módulo${sel.length > 1 ? "s" : ""}` : "módulos"} por WhatsApp <ArrowRight className="h-4 w-4" />
+        </a>
       </div>
     </div>
   );
 }
 
 const faqs = [
-  ["¿Debo comprar servidores?", "No. El servicio incluye hosting: el sistema funciona en la nube y usted solo necesita una computadora o celular con internet."],
-  ["¿El sistema incluye soporte?", "Sí. Nuestro equipo lo acompaña por WhatsApp, teléfono y correo ante cualquier consulta."],
-  ["¿Incluye copias de seguridad?", "Sí, realizamos backups automáticos para que su información esté siempre protegida."],
-  ["¿Puedo acceder desde cualquier lugar?", "Sí. Puede ingresar desde la oficina, su casa o el celular, en cualquier momento."],
-  ["¿Capacitan a nuestro personal?", "Sí. Capacitamos a administradores, encargados de facturación y lecturistas para que usen el sistema con confianza."],
-  ["¿La aplicación móvil funciona sin internet?", "Sí. Los lecturistas registran las lecturas sin conexión y los datos se sincronizan automáticamente al recuperar señal."],
-  ["¿Puedo agregar módulos como compras, pagos o contabilidad?", "Sí. Con el plan a medida usted elige los módulos que necesita —Compras, Pagos, Tesorería, Contabilidad y Stock— y recibe una cotización según esos módulos y la cantidad de usuarios."],
-];
+  ["¿Hay un costo de instalación?", `Sí. Además de la mensualidad hay un pago único de instalación, desde Gs. ${INSTALL_FEE}. Incluye la carga de su padrón de usuarios, la configuración de tarifas y la capacitación inicial. El monto final se define según las características de cada Junta.`],
+  ["¿Tenemos que comprar un servidor?", "No es necesario. En la nube nosotros nos encargamos del servidor, las copias de seguridad y las actualizaciones; usted solo necesita una computadora o un celular con internet. Si prefiere que los datos queden en su organización, también instalamos el sistema en un servidor propio."],
+  ["¿Cuánto cuesta tenerlo en un servidor propio?", "La instalación se cotiza según su infraestructura. No hay un costo fijo de mantenimiento: el soporte y las mejoras se cobran solo cuando los necesite."],
+  ["¿La app funciona sin internet?", "Sí. El lecturista carga las lecturas sin conexión y los datos se sincronizan cuando el celular vuelve a tener señal."],
+  ["¿Quién carga los datos que ya tenemos?", "Nosotros. La instalación incluye pasar su padrón de usuarios y sus tarifas al sistema, aunque hoy estén en planillas de Excel o en papel."],
+  ["¿Capacitan a nuestro personal?", "Sí. Capacitamos a quienes administran, a quienes cobran y a los lecturistas, cada uno en lo que le toca usar."],
+  ["¿Cómo es el soporte?", `Por WhatsApp, teléfono y correo, desde Paraguay. Escríbanos al ${PHONE_LOCAL} o a ${EMAIL}.`],
+] as const;
 
 function Index() {
-  useReveal();
-  const [faq, setFaq] = useState<number | null>(0);
   return (
     <div id="inicio" className="overflow-x-hidden">
       <Header />
 
-      {/* HERO */}
-      <section className="bg-hero relative">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-14 md:pt-20 lg:grid-cols-2">
-          <div className="reveal">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-accent px-4 py-1.5 text-sm font-semibold text-navy">
-              <Droplets className="h-4 w-4 text-primary" /> Especializado en agua potable · Paraguay
-            </span>
-            <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-navy md:text-6xl">
-              Digitalice la gestión de su <span className="text-gradient">Junta de Saneamiento</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground md:text-xl">
-              Controle lecturas, facturación, cobranzas y órdenes de trabajo desde una sola plataforma.
+      {/* INICIO */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-5 pt-14 md:pt-20">
+          <div className="max-w-3xl">
+            <p className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+              Para Juntas de Saneamiento y aguaterías del Paraguay
             </p>
-            <ul className="mt-8 grid gap-3 font-medium sm:grid-cols-2">
-              <Check>Facturación automática</Check>
-              <Check>App para toma de lecturas</Check>
-              <Check>Control de morosidad</Check>
-              <Check>Reportes gerenciales</Check>
-              <Check>Acceso desde cualquier lugar</Check>
-            </ul>
-            <div className="mt-10"><CTAButtons /></div>
-            <p className="mt-5 text-sm text-muted-foreground">Ya operativo en varias Juntas de Saneamiento del país.</p>
-          </div>
-          <div className="reveal relative">
-            <div className="absolute -inset-6 rounded-[2rem] bg-gradient-primary opacity-15 blur-3xl" />
-            <img src={heroImg} alt="Panel del sistema con lecturas, facturación y morosidad" width={1408} height={1056} className="relative rounded-3xl shadow-lift" />
-            <div className="float-slow absolute -bottom-6 -left-4 hidden rounded-2xl bg-card p-4 shadow-lift sm:block">
-              <p className="text-xs text-muted-foreground">Recaudación del mes</p>
-              <p className="flex items-center gap-1 text-xl font-extrabold text-navy">+18% <TrendingUp className="h-5 w-5 text-success" /></p>
+            <h1 className="mt-4 font-display text-[2.6rem] font-bold leading-[1.02] text-ink md:text-7xl">
+              Del medidor a la asamblea, sin planillas.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+              {BRAND} es el sistema con el que las Juntas toman las lecturas con el celular, emiten las
+              facturas del período, registran los cobros y saben al día quién debe y desde cuándo.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href="#contacto" className={btnPrimary}>Pedir una demostración <ArrowRight className="h-4 w-4" /></a>
+              <a href={waLink(demoMsg)} target="_blank" rel="noopener" className={btnOutline}>
+                <MessageCircle className="h-4 w-4 text-success" />WhatsApp {PHONE_LOCAL}
+              </a>
             </div>
+            <dl className="mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-3 border-t border-border pt-6 text-sm sm:grid-cols-3">
+              {[["Desde", "Gs. 250.000 / mes"], ["Dónde", "En la nube o en su servidor"], ["Soporte", "Desde Paraguay"]].map(([k, v]) => (
+                <div key={k}><dt className="text-muted-foreground">{k}</dt><dd className="font-semibold text-ink">{v}</dd></div>
+              ))}
+            </dl>
           </div>
-        </div>
-      </section>
 
-      {/* FRANJA DE CONFIANZA */}
-      <section className="border-y border-border bg-card">
-        <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { i: Globe, t: "Sin instalación", d: "Funciona desde la computadora o el celular" },
-            { i: Lock, t: "Acceso seguro", d: "Usuario y contraseña para cada funcionario" },
-            { i: ShieldCheck, t: "Sus datos respaldados", d: "Copias de seguridad automáticas" },
-            { i: PhoneCall, t: "Soporte cercano", d: "Atención por WhatsApp y teléfono" },
-          ].map(({ i: I, t, d }) => (
-            <div key={t} className="flex items-center gap-4">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent text-primary"><I className="h-5 w-5" /></span>
-              <div><p className="font-bold text-navy">{t}</p><p className="text-sm text-muted-foreground">{d}</p></div>
+          <figure className="relative mt-14 pb-10 md:pb-16">
+            <div className="overflow-hidden rounded-t-lg border border-b-0 border-ink/15 bg-white shadow-[0_-12px_40px_-24px_rgb(0_0_0/0.35)]">
+              <img src={panelImg} alt="Panel principal del sistema: medidores, consumo, facturado, cobrado y deuda acumulada" width={1901} height={640} className="block w-full" />
             </div>
-          ))}
+            <div className="absolute -bottom-2 right-3 w-[30%] max-w-[230px] md:right-10">
+              <PhoneShot src={appLecturasImg} alt="App: lista de lecturas del período con el consumo de cada medidor" />
+            </div>
+            <figcaption className="mt-4 max-w-[60%] text-xs text-muted-foreground">
+              Capturas reales del sistema y de la app. Ocultamos los datos personales de los socios.
+            </figcaption>
+          </figure>
         </div>
       </section>
 
-
-      {/* PROBLEMAS */}
-      <section className="bg-surface py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="El problema" title="¿Su Junta sigue trabajando con planillas y procesos manuales?" />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {problems.map(({ i: I, t, d }) => (
-              <div key={t} className="reveal rounded-2xl border border-border bg-card p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-destructive/10 text-destructive"><I className="h-6 w-6" /></span>
-                <h3 className="mt-5 text-lg font-bold text-navy">{t}</h3>
-                <p className="mt-2 text-muted-foreground">{d}</p>
-              </div>
+      {/* EL PERÍODO */}
+      <section id="periodo" className="py-24">
+        <div className="mx-auto max-w-6xl px-5">
+          <Heading n="01" label="Cómo trabaja la Junta" title="Un período completo, en un solo sistema">
+            Cada mes la Junta hace lo mismo: leer, facturar, cobrar y rendir cuentas. {BRAND} acompaña cada paso.
+          </Heading>
+          <ol className="grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-5">
+            {steps.map((s, k) => (
+              <li key={s.t} className="bg-background p-6">
+                <div className="flex items-baseline justify-between">
+                  <span className="font-display text-4xl font-bold text-primary">{k + 1}</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {s.app ? <Smartphone className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}{s.app ? "App" : "Sistema"}
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-bold text-ink">{s.t}</h3>
+                <p className="mt-2 text-[15px] text-muted-foreground">{s.d}</p>
+              </li>
             ))}
-          </div>
-          <p className="reveal mx-auto mt-14 max-w-2xl text-center text-xl font-semibold text-navy">
-            Nuestro sistema elimina estos problemas mediante <span className="text-primary">procesos completamente digitalizados.</span>
-          </p>
-        </div>
-      </section>
-
-      {/* SOLUCIÓN */}
-      <section id="funcionalidades" className="py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="La solución" title="Todo lo que necesita para gestionar su Junta de Saneamiento" desc="Módulos integrados que trabajan juntos, desde la lectura del medidor hasta el reporte para la asamblea." />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {modules.map(({ i: I, t, items }) => (
-              <div key={t} className="reveal group rounded-2xl border border-border bg-card p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-primary text-primary-foreground"><I className="h-6 w-6" /></span>
-                <h3 className="mt-5 text-xl font-bold text-navy">{t}</h3>
-                <ul className="mt-4 space-y-2 text-muted-foreground">{items.map((x) => <Check key={x}>{x}</Check>)}</ul>
-              </div>
-            ))}
-          </div>
+          </ol>
+          <figure className="mt-12 grid items-center gap-8 lg:grid-cols-[1.6fr_1fr]">
+            <div className="overflow-hidden rounded-lg border border-ink/15 bg-white">
+              <img src={prefacturasImg} alt="Pantalla de generación e impresión de pre-facturas por sector" width={1901} height={861} loading="lazy" className="block w-full" />
+            </div>
+            <figcaption>
+              <p className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-primary">Paso 2</p>
+              <p className="mt-2 font-display text-2xl font-bold text-ink">Pre-facturas por sector</p>
+              <p className="mt-3 text-muted-foreground">
+                Se eligen el sector y las fechas de emisión y vencimiento, y se generan e imprimen todas las
+                pre-facturas del período. Si una se pierde, se vuelve a imprimir desde el talonario.
+              </p>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
       {/* APP */}
-      <section id="app" className="bg-gradient-navy py-24 text-navy-foreground">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
-          <div className="reveal order-2 lg:order-1">
-            <img src={appImg} alt="App móvil para registrar lecturas de medidores" width={928} height={1152} loading="lazy" className="mx-auto max-h-[560px] w-auto rounded-3xl object-cover shadow-lift" />
-          </div>
-          <div className="reveal order-1 lg:order-2">
-            <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-sky"><Smartphone className="h-4 w-4" />App móvil</span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">Lecturas desde el terreno con nuestra App Móvil</h2>
-            <p className="mt-5 text-lg opacity-85">Los lecturistas pueden registrar consumos desde cualquier lugar, incluso sin conexión a internet.</p>
-            <ul className="mt-8 space-y-4 text-lg">
-              <Check>Trabajo offline</Check>
-              <Check>Sincronización automática</Check>
-              <Check>Consulta de clientes</Check>
-              <Check>Historial de lecturas</Check>
-            </ul>
-            <a href={waLink("Hola, quiero ver la App móvil para lecturistas.")} target="_blank" rel="noopener" className={`${btnWa} mt-10`}><MessageCircle className="h-5 w-5" />Quiero ver la app</a>
-          </div>
-        </div>
-      </section>
-
-      {/* PORTAL */}
-      <section className="py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
-          <div className="reveal">
-            <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary"><Globe className="h-4 w-4" />Portal de usuarios</span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-navy md:text-5xl">Mejor atención para sus usuarios</h2>
-            <p className="mt-5 text-lg text-muted-foreground">Los usuarios pueden consultar su información sin necesidad de acercarse a la oficina. Menos filas, menos llamadas, más satisfacción.</p>
-            <ul className="mt-8 grid gap-3 font-medium sm:grid-cols-2">
-              <Check>Consulta de saldo</Check>
-              <Check>Historial de facturas</Check>
-              <Check>Historial de pagos</Check>
-              <Check>Estado de cuenta</Check>
-              <Check>Información de servicios</Check>
-            </ul>
-          </div>
-          <div className="reveal rounded-3xl border border-border bg-card p-6 shadow-lift md:p-8">
-            <div className="flex items-center justify-between border-b border-border pb-5">
-              <div><p className="text-sm text-muted-foreground">Socio N.º 0482</p><p className="text-lg font-bold text-navy">María González</p></div>
-              <span className="rounded-full bg-success/15 px-3 py-1 text-sm font-semibold text-success">Al día</span>
-            </div>
-            <div className="mt-6 rounded-2xl bg-gradient-primary p-6 text-primary-foreground">
-              <p className="text-sm opacity-90">Saldo actual</p>
-              <p className="mt-1 text-4xl font-extrabold">Gs. 0</p>
-              <p className="mt-2 text-sm opacity-90">Próximo vencimiento: 10/11</p>
-            </div>
-            <ul className="mt-6 divide-y divide-border text-sm">
-              {[["Factura Octubre", "18 m³", "Gs. 62.000", "Pagado"], ["Factura Septiembre", "16 m³", "Gs. 55.000", "Pagado"], ["Factura Agosto", "21 m³", "Gs. 71.500", "Pagado"]].map(([a, b, c, d]) => (
-                <li key={a} className="flex items-center justify-between py-3.5">
-                  <div><p className="font-semibold text-navy">{a}</p><p className="text-muted-foreground">{b}</p></div>
-                  <div className="text-right"><p className="font-semibold">{c}</p><p className="text-success">{d}</p></div>
+      <section id="app" className="bg-ink py-24 text-white">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+          <div>
+            <p className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-sky">02 · App del lecturista</p>
+            <h2 className="mt-3 font-display text-3xl font-bold leading-tight md:text-[2.75rem]">Las lecturas se cargan donde está el medidor</h2>
+            <p className="mt-4 text-lg text-white/75">
+              Se acabaron las planillas mojadas y los números mal pasados. El lecturista anota en el
+              celular y la lectura llega directo al sistema.
+            </p>
+            <ul className="mt-8 space-y-4">
+              {appFeatures.map(({ I, t, d }) => (
+                <li key={t} className="flex gap-4">
+                  <I className="mt-1 h-5 w-5 shrink-0 text-sky" />
+                  <div><p className="font-semibold">{t}</p><p className="text-white/65">{d}</p></div>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-      </section>
-
-      {/* BENEFICIOS */}
-      <section id="beneficios" className="bg-surface py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="Beneficios" title="Más control. Más eficiencia. Más recaudación." />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {benefits.map(({ i: I, t, d }) => (
-              <div key={t} className="reveal flex gap-5 rounded-2xl bg-card p-7 shadow-soft">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-success/15 text-success"><I className="h-6 w-6" /></span>
-                <div><h3 className="text-lg font-bold text-navy">{t}</h3><p className="mt-1.5 text-muted-foreground">{d}</p></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CASOS */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="Casos de éxito" title="Plataforma utilizada por Juntas de Saneamiento" desc="Nuestra solución ya se encuentra operativa ayudando a organizaciones a mejorar su gestión administrativa y financiera." />
-          <div className="reveal mb-14 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {["Junta de Saneamiento", "Aguatería", "Cooperativa de Agua", "Junta de Saneamiento"].map((n, k) => (
-              <div key={k} className="flex h-20 items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-surface text-sm font-semibold text-muted-foreground">
-                <Droplets className="h-5 w-5" />{n}
-              </div>
-            ))}
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              ["Antes tardábamos una semana en facturar. Hoy lo hacemos en una tarde y sin errores.", "Presidente", "Junta de Saneamiento"],
-              ["Ahora sabemos exactamente quién debe. La morosidad bajó y la recaudación mejoró notablemente.", "Tesorera", "Junta de Saneamiento"],
-              ["Los lecturistas aprendieron a usar la app en un día. Ya no usamos más papel.", "Administrador", "Aguatería privada"],
-            ].map(([q, r, o], k) => (
-              <figure key={k} className="reveal rounded-2xl border border-border bg-card p-7 shadow-soft">
-                <div className="flex gap-1 text-primary">{Array.from({ length: 5 }).map((_, s) => <Star key={s} className="h-4 w-4 fill-current" />)}</div>
-                <blockquote className="mt-4 text-lg text-foreground">“{q}”</blockquote>
-                <figcaption className="mt-5 text-sm"><span className="font-bold text-navy">{r}</span> · <span className="text-muted-foreground">{o}</span></figcaption>
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:items-start sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0">
+            {appShots.map((s, k) => (
+              <figure key={s.cap} className={`w-[62%] shrink-0 snap-center sm:w-auto ${k === 1 ? "sm:mt-10" : ""}`}>
+                <PhoneShot src={s.src} alt={s.alt} />
+                <figcaption className="mt-3 text-center text-sm text-white/70">{s.cap}</figcaption>
               </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PLANES */}
-      <section id="planes" className="bg-surface py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="Planes y precios" title="Planes adaptados al tamaño de su organización" desc="Sin inversión en servidores. Hosting, soporte y actualizaciones incluidos." />
-          <div className="grid items-start gap-6 lg:grid-cols-3">
-            {plans.map((p) => (
-              <div key={p.name} className={`reveal relative rounded-3xl bg-card p-8 ${p.popular ? "border-2 border-primary shadow-lift lg:-mt-4" : "border border-border shadow-soft"}`}>
-                {p.popular && <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-primary px-4 py-1 text-xs font-bold tracking-wider text-primary-foreground">MÁS POPULAR</span>}
-                <h3 className="text-xl font-bold text-navy">Plan {p.name}</h3>
-                <p className="mt-2 min-h-12 text-sm text-muted-foreground">{p.desc}</p>
-                <p className="mt-6"><span className="text-sm font-semibold text-muted-foreground">Gs.</span> <span className="text-4xl font-extrabold text-navy">{p.price}</span> <span className="text-muted-foreground">/ mes</span></p>
-                <a href={waLink(`Hola, me interesa el Plan ${p.name}.`)} target="_blank" rel="noopener" className={`${p.popular ? btnPrimary : btnGhost} mt-7 w-full`}>{p.cta}</a>
-                {p.lead && <p className="mt-7 text-sm font-semibold text-navy">{p.lead}</p>}
-                <ul className={`${p.lead ? "mt-3" : "mt-7"} space-y-3 text-sm`}>{p.items.map((x) => <Check key={x}>{x}</Check>)}</ul>
+      {/* MÓDULOS */}
+      <section id="modulos" className="border-b border-border bg-surface py-24">
+        <div className="mx-auto max-w-6xl px-5">
+          <Heading n="03" label="Módulos" title="Además del agua, la administración de la Junta">
+            Compras, pagos, bancos y contabilidad en el mismo sistema que la facturación del agua.
+          </Heading>
+          <Modules />
+        </div>
+      </section>
+
+      {/* PRECIOS */}
+      <section id="precios" className="py-24">
+        <div className="mx-auto max-w-6xl px-5">
+          <Heading n="04" label="Precios" title="Una mensualidad según el tamaño de la Junta">
+            Precios mensuales en la nube, con hosting, copias de seguridad, soporte y actualizaciones incluidos.
+          </Heading>
+          <div className="grid overflow-hidden rounded-lg border border-border md:grid-cols-3">
+            {plans.map((p, k) => (
+              <div key={p.name} className={`flex flex-col p-7 ${k > 0 ? "border-t border-border md:border-l md:border-t-0" : ""} ${p.rec ? "bg-water/60" : "bg-background"}`}>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-xl font-bold text-ink">{p.name}</h3>
+                  {p.rec && <span className="text-xs font-semibold uppercase tracking-wider text-primary">Recomendado</span>}
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{p.who}</p>
+                <p className="mt-6 font-display text-ink">
+                  <span className="text-lg font-semibold">Gs.</span> <span className="text-[2.6rem] font-bold leading-none">{p.price}</span>
+                  <span className="text-muted-foreground"> / mes</span>
+                </p>
+                <p className="mt-1 text-sm font-semibold text-ink">{p.users}</p>
+                {p.lead && <p className="mt-6 text-sm font-semibold text-ink">{p.lead}</p>}
+                <ul className={`${p.lead ? "mt-3" : "mt-6"} flex-1 space-y-2.5 text-[15px]`}>{p.items.map((x) => <Item key={x}>{x}</Item>)}</ul>
+                <a href={waLink(`Hola, me interesa el plan ${p.name} de Y-Gestión.`)} target="_blank" rel="noopener" className={`${p.rec ? btnPrimary : btnOutline} mt-8`}>
+                  Consultar plan {p.name}
+                </a>
               </div>
             ))}
           </div>
-          <CustomPlan />
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="py-24">
-        <div className="mx-auto max-w-3xl px-5">
-          <SectionHead eyebrow="Preguntas frecuentes" title="Resolvemos sus dudas" />
-          <div className="space-y-4">
-            {faqs.map(([q, a], k) => (
-              <div key={q} className="reveal rounded-2xl border border-border bg-card shadow-soft">
-                <button onClick={() => setFaq(faq === k ? null : k)} className="flex w-full items-center justify-between gap-4 p-6 text-left text-lg font-semibold text-navy" aria-expanded={faq === k}>
-                  {q}<ChevronDown className={`h-5 w-5 shrink-0 text-primary transition ${faq === k ? "rotate-180" : ""}`} />
-                </button>
-                {faq === k && <p className="px-6 pb-6 text-muted-foreground">{a}</p>}
-              </div>
-            ))}
+          <div className="mt-4 rounded-lg border border-dashed border-ink/25 px-6 py-5 md:flex md:items-center md:justify-between md:gap-8">
+            <p className="font-display text-lg font-bold text-ink">Instalación: desde Gs. {INSTALL_FEE}, pago único</p>
+            <p className="mt-1 text-muted-foreground md:mt-0 md:max-w-xl md:text-right">
+              Incluye la carga del padrón, la configuración de tarifas y la capacitación. El monto final se
+              define según las características de cada Junta.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* CÓMO EMPEZAR */}
-      <section id="como-empezar" className="bg-surface py-24">
-        <div className="mx-auto max-w-7xl px-5">
-          <SectionHead eyebrow="Cómo empezar" title="Su Junta digitalizada en 4 pasos simples" desc="Lo acompañamos en todo el proceso para que el cambio sea sin interrupciones y sin complicaciones." />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { t: "Cargamos sus datos", d: "Pasamos su padrón de usuarios, medidores y tarifas al sistema. Usted no tiene que cargar nada." },
-              { t: "Capacitamos a su equipo", d: "Enseñamos a administradores, cajeros y lecturistas a usar el sistema paso a paso." },
-              { t: "Lee y factura", d: "Cada mes se toman las lecturas con la app y el sistema genera todas las facturas automáticamente." },
-              { t: "Controla todo", d: "Vea cobros, deudas, consumos y reportes actualizados cuando lo necesite." },
-            ].map((s, k) => (
-              <div key={s.t} className="reveal rounded-2xl border border-border bg-card p-7 shadow-soft">
-                <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-primary text-lg font-extrabold text-primary-foreground">{k + 1}</span>
-                <h3 className="mt-5 text-lg font-bold text-navy">{s.t}</h3>
-                <p className="mt-2 text-muted-foreground">{s.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FINAL */}
-      <section id="contacto" className="px-5 py-24">
-        <div className="reveal mx-auto max-w-6xl rounded-[2rem] bg-gradient-navy px-6 py-16 text-center text-navy-foreground shadow-lift md:px-16 md:py-20">
-          <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl">Modernice hoy la gestión de su Junta de Saneamiento</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg opacity-85">Controle lecturas, facturación, cobranzas y usuarios desde una única plataforma diseñada especialmente para organizaciones de agua potable.</p>
-          <div className="mt-10"><CTAButtons center /></div>
-        </div>
-        <div className="mx-auto mt-16 grid max-w-6xl items-start gap-10 lg:grid-cols-5">
-          <div className="lg:col-span-2">
-            <h2 className="text-3xl font-extrabold tracking-tight text-navy">Solicite su demostración gratuita</h2>
-            <p className="mt-4 text-lg text-muted-foreground">Complete el formulario y nos comunicaremos con usted para coordinar una demostración del sistema.</p>
-            <a href={waLink(demoMsg)} target="_blank" rel="noopener" className={`${btnWa} mt-6`}><MessageCircle className="h-5 w-5" />Prefiero WhatsApp</a>
-          </div>
-          <div className="lg:col-span-3"><ContactForm /></div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-border bg-surface">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <Logo />
-            <p className="mt-4 max-w-sm text-muted-foreground">Sistema de gestión especializado para Juntas de Saneamiento, Aguaterías y Cooperativas de agua de Paraguay.</p>
-            <p className="mt-3 text-sm font-medium text-primary">“Y” significa agua en guaraní.</p>
-            <div className="mt-5 flex gap-3">
-              {[Facebook, Instagram, Linkedin].map((I, k) => <a key={k} href="#" aria-label="Red social" className="grid h-10 w-10 place-items-center rounded-full bg-card text-navy shadow-soft hover:text-primary"><I className="h-4 w-4" /></a>)}
+          <h3 className="mt-20 font-display text-2xl font-bold text-ink md:text-3xl">Dónde funciona el sistema</h3>
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <div className="rounded-lg border border-border p-7">
+              <Cloud className="h-7 w-7 text-primary" />
+              <h4 className="mt-4 font-display text-xl font-bold text-ink">En la nube</h4>
+              <p className="mt-1 text-muted-foreground">Nosotros nos encargamos del servidor.</p>
+              <ul className="mt-5 space-y-2.5">
+                <Item>Mensualidad según el plan</Item>
+                <Item>Copias de seguridad y actualizaciones incluidas</Item>
+                <Item>Acceso desde la oficina, la casa o el celular</Item>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border p-7">
+              <Server className="h-7 w-7 text-primary" />
+              <h4 className="mt-4 font-display text-xl font-bold text-ink">En su servidor (on-premise)</h4>
+              <p className="mt-1 text-muted-foreground">Los datos quedan físicamente en su organización.</p>
+              <ul className="mt-5 space-y-2.5">
+                <Item>Funciona dentro de su red local</Item>
+                <Item>Sin costo fijo de mantenimiento</Item>
+                <Item>Soporte y mejoras se cobran solo cuando los necesite</Item>
+                <Item>Instalación a cotizar según su infraestructura</Item>
+              </ul>
+              <a href={waLink("Hola, quiero cotizar Y-Gestión instalado en un servidor propio (on-premise).")} target="_blank" rel="noopener" className={`${btnOutline} mt-6`}>
+                Cotizar instalación en servidor propio
+              </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* PREGUNTAS */}
+      <section id="faq" className="border-t border-border bg-surface py-24">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.6fr]">
+          <Heading n="05" label="Preguntas" title="Lo que suelen preguntar las comisiones" />
+          <div className="divide-y divide-border border-y border-border">
+            {faqs.map(([q, a], k) => (
+              <details key={q} className="group py-5" open={k === 0}>
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold text-ink">
+                  {q}<span className="text-2xl font-normal text-primary transition group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-3 text-muted-foreground">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACTO */}
+      <section id="contacto" className="py-24">
+        <div className="mx-auto grid max-w-6xl items-start gap-12 px-5 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <h4 className="font-bold text-navy">Enlaces</h4>
-            <ul className="mt-4 space-y-2.5 text-muted-foreground">
-              <li><a href="#inicio" className="hover:text-primary">Inicio</a></li>
-              <li><a href="#funcionalidades" className="hover:text-primary">Funcionalidades</a></li>
-              <li><a href="#planes" className="hover:text-primary">Planes</a></li>
-              <li><a href="#contacto" className="hover:text-primary">Contacto</a></li>
-              <li><Link to="/privacidad" className="hover:text-primary">Política de privacidad</Link></li>
+            <p className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-primary">06 · Demostración</p>
+            <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-ink md:text-[2.75rem]">Vea el sistema funcionando</h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Déjenos sus datos y coordinamos una demostración, en su oficina o por videollamada. Sin compromiso.
+            </p>
+            <ul className="mt-8 space-y-4">
+              <li><a href={waLink(demoMsg)} target="_blank" rel="noopener" className="flex items-center gap-3 font-semibold text-ink hover:text-success"><MessageCircle className="h-5 w-5 text-success" />WhatsApp {PHONE_LOCAL}</a></li>
+              <li><a href={telHref} className="flex items-center gap-3 font-semibold text-ink hover:text-primary"><Phone className="h-5 w-5 text-primary" />{PHONE}</a></li>
+              <li><a href={`mailto:${EMAIL}`} className="flex items-center gap-3 font-semibold text-ink hover:text-primary"><Mail className="h-5 w-5 text-primary" />{EMAIL}</a></li>
+            </ul>
+          </div>
+          <ContactForm />
+        </div>
+      </section>
+
+      {/* PIE */}
+      <footer className="bg-ink text-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.5fr_1fr_1fr]">
+          <div>
+            <Logo light />
+            <p className="mt-4 max-w-sm text-white/70">
+              <span className="font-semibold text-white">“Y” significa agua en guaraní.</span> Sistema de gestión para
+              Juntas de Saneamiento, aguaterías y cooperativas de agua del Paraguay.
+            </p>
+            <p className="mt-3 text-sm text-white/50">Un sistema de {COMPANY}.</p>
+          </div>
+          <div>
+            <h4 className="font-display font-bold">Secciones</h4>
+            <ul className="mt-4 space-y-2 text-white/70">
+              <li><a href="#periodo" className="hover:text-white">Cómo funciona</a></li>
+              <li><a href="#app" className="hover:text-white">App del lecturista</a></li>
+              <li><a href="#precios" className="hover:text-white">Precios</a></li>
+              <li><Link to="/privacidad" className="hover:text-white">Política de privacidad</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-navy">Contacto</h4>
-            <ul className="mt-4 space-y-2.5 text-muted-foreground">
-              <li className="flex gap-2"><Phone className="h-4 w-4 mt-1" />{PHONE}</li>
-              <li><a href={waLink()} target="_blank" rel="noopener" className="flex gap-2 hover:text-success"><MessageCircle className="h-4 w-4 mt-1" />WhatsApp</a></li>
-              <li className="flex gap-2"><Mail className="h-4 w-4 mt-1" />{EMAIL}</li>
-              <li className="flex gap-2"><MapPin className="h-4 w-4 mt-1" />{ADDRESS}</li>
+            <h4 className="font-display font-bold">Contacto</h4>
+            <ul className="mt-4 space-y-2 text-white/70">
+              <li><a href={waLink()} target="_blank" rel="noopener" className="hover:text-white">WhatsApp {PHONE_LOCAL}</a></li>
+              <li><a href={`mailto:${EMAIL}`} className="hover:text-white">{EMAIL}</a></li>
             </ul>
           </div>
         </div>
-        <p className="border-t border-border py-6 text-center text-sm text-muted-foreground">© {new Date().getFullYear()} {BRAND}. Todos los derechos reservados.</p>
+        <p className="border-t border-white/10 py-6 text-center text-sm text-white/50">© {new Date().getFullYear()} {BRAND} · {COMPANY}</p>
       </footer>
 
-      {/* WhatsApp flotante */}
-      <a href={waLink()} target="_blank" rel="noopener" aria-label="Contactar por WhatsApp" className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-success text-success-foreground shadow-lift transition hover:scale-110">
-        <MessageCircle className="h-7 w-7" />
+      <a href={waLink()} target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
+        className="fixed bottom-5 right-5 z-50 grid h-13 w-13 place-items-center rounded-full bg-success text-success-foreground shadow-lg transition hover:scale-105">
+        <MessageCircle className="h-6 w-6" />
       </a>
     </div>
   );
