@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: ygestion_web
+    restart: always
+    env_file: .env
+    environment:
+      PORT: "3000"
+    ports:
+      - "${YG_PORT:-3010}:3000"

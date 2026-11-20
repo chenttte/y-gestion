@@ -1,15 +1,7 @@
 import { useState } from "react";
-import { z } from "zod";
 import { CheckCircle2, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-
-const schema = z.object({
-  nombre: z.string().trim().min(1, "Ingrese su nombre").max(100),
-  correo: z.string().trim().email("Correo no válido").max(255),
-  telefono: z.string().trim().max(30).optional(),
-  junta: z.string().trim().min(1, "Ingrese el nombre de su Junta").max(150),
-  mensaje: z.string().trim().max(1000).optional(),
-});
+import { contactSchema as schema } from "@/lib/contact-schema";
+import { enviarConsulta } from "@/lib/contact.functions";
 
 const field = "mt-1.5 w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
 
@@ -30,12 +22,12 @@ export function ContactForm() {
     }
     setErrors({});
     setStatus("sending");
-    const v = parsed.data;
-    const { error } = await supabase.from("contact_submissions").insert({
-      nombre: v.nombre, correo: v.correo, junta: v.junta,
-      telefono: v.telefono || null, mensaje: v.mensaje || null,
-    });
-    if (error) { setStatus("error"); return; }
+    try {
+      await enviarConsulta({ data: parsed.data });
+    } catch {
+      setStatus("error");
+      return;
+    }
     form.reset();
     setStatus("ok");
   }
@@ -59,6 +51,8 @@ export function ContactForm() {
         <label className="text-sm font-semibold text-navy">Correo electrónico*<input name="correo" type="email" maxLength={255} className={field} />{err("correo")}</label>
         <label className="text-sm font-semibold text-navy">Teléfono<input name="telefono" type="tel" maxLength={30} className={field} /></label>
         <label className="text-sm font-semibold text-navy">Nombre de la Junta o Aguatería*<input name="junta" maxLength={150} className={field} />{err("junta")}</label>
+        {/* Honeypot anti-spam: oculto para personas, los bots suelen completarlo */}
+        <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
         <label className="text-sm font-semibold text-navy sm:col-span-2">Mensaje (opcional)<textarea name="mensaje" rows={4} maxLength={1000} className={field} /></label>
       </div>
       {status === "error" && <p className="mt-4 text-sm text-destructive">No pudimos enviar su consulta. Intente de nuevo o escríbanos por WhatsApp.</p>}
