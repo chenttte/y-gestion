@@ -25,7 +25,7 @@ bun run test
 ## Producción (Docker)
 
 ```sh
-docker compose up -d --build   # expone el puerto ${YG_PORT:-3010}
+docker compose up -d --build   # expone el puerto ${YG_PORT:-3030}
 ```
 
 Sin Docker: `bun run build && bun run start` (lee las variables del entorno, no del `.env`).

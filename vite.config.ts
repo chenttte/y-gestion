@@ -12,8 +12,9 @@ export default defineConfig({
   plugins: [
     // src/server.ts envuelve el entry de TanStack Start con la página de error SSR.
     tanstackStart({ server: { entry: "server" } }),
-    // Sin preset explícito Nitro genera un servidor Node: .output/server/index.mjs
-    nitro(),
+    // Preset fijo: si no, Nitro detecta el runtime del build (Bun en Docker) y genera
+    // un servidor para Bun, que falla al ejecutarse con Node.
+    nitro({ preset: "node-server" }),
     viteReact(),
     tailwindcss(),
   ],
