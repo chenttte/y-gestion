@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestIP } from "@tanstack/react-start/server";
+import { getRequestHeader, getRequestIP } from "@tanstack/react-start/server";
 import { contactSchema } from "./contact-schema";
 import { sendContactEmail } from "./mailer.server";
 
@@ -23,7 +23,8 @@ export const enviarConsulta = createServerFn({ method: "POST" })
     // Bot detectado: respondemos "ok" sin enviar nada.
     if (data.website) return { ok: true };
 
-    const ip = getRequestIP({ xForwardedFor: true }) ?? "desconocida";
+    // nginx fija X-Real-IP con la IP real del visitante (X-Forwarded-For lo puede falsear el cliente).
+    const ip = getRequestHeader("x-real-ip") ?? getRequestIP() ?? "desconocida";
     if (rateLimited(ip)) throw new Error("Demasiadas consultas. Intente más tarde.");
 
     await sendContactEmail(data);

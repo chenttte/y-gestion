@@ -7,4 +7,5 @@ services:
     environment:
       PORT: "3000"
     ports:
-      - "${YG_PORT:-3030}:3000"
+      # Solo accesible localmente: el acceso público es por nginx (deploy/nginx/).
+      - "127.0.0.1:${YG_PORT:-3030}:3000"
